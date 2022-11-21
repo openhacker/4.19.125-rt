@@ -777,6 +777,48 @@ int cam_sensor_set_alt_id(struct cam_sensor_ctrl_t *s_ctrl)
 	return rc;
 }
 
+int cam_sensor_imx678_disable_standby(struct cam_sensor_ctrl_t *s_ctrl)
+{
+	/* 
+	* ModalAI 
+	*
+	* IMX678 won't populate sensor ID register unless standby register is disabled 
+	* Check if we're probing for ixm678 and attempt to disable this register
+	*/
+
+	int rc = 0;
+
+	/* Check if we're probing for IMX678 */
+	if (s_ctrl->sensordata->slave_info.sensor_id != 0xA602) {
+		return rc;
+	}
+
+	struct cam_sensor_i2c_reg_array i2c_reg_array[1];
+	i2c_reg_array[0].reg_addr = 0x3000; /* STANDBY - 0H: Operating, 1H Standby (default) */
+	i2c_reg_array[0].reg_data = 0x00;
+	i2c_reg_array[0].delay = 0x00;
+	i2c_reg_array[0].data_mask = 0x00;
+
+	struct cam_sensor_i2c_reg_setting write_setting;
+	write_setting.reg_setting = i2c_reg_array;
+	write_setting.size = 1;
+	write_setting.addr_type = CAMERA_SENSOR_I2C_TYPE_WORD;
+	write_setting.data_type = CAMERA_SENSOR_I2C_TYPE_BYTE;
+	write_setting.delay = 0;
+	write_setting.read_buff = 0;
+	write_setting.read_buff_len = 0;	
+
+	rc = camera_io_dev_write(&(s_ctrl->io_master_info), &write_setting);
+	msleep(80); /* 80ms delay required after setting STANDBY register to operating */
+
+	/* Output prints */
+	if (rc < 0)
+		CAM_ERR(CAM_SENSOR, "[Setting register to standby] camera_io_dev_write failed: rc=%d", rc);
+	else
+		CAM_INFO(CAM_SENSOR, "[Setting register to standby] STANDBY set to operating");
+
+	return rc;
+}
 
 int32_t cam_sensor_driver_cmd(struct cam_sensor_ctrl_t *s_ctrl,
 	void *arg)
@@ -857,6 +899,9 @@ int32_t cam_sensor_driver_cmd(struct cam_sensor_ctrl_t *s_ctrl,
 
 		/* ModalAI Hack - right after power up, set alt ID as needed*/
 		rc = cam_sensor_set_alt_id(s_ctrl);
+
+		/* ModalAI - disable standby register for imx678 */
+		rc = cam_sensor_imx678_disable_standby(s_ctrl);		
 
 		/* Match sensor ID */
 		rc = cam_sensor_match_id(s_ctrl);
