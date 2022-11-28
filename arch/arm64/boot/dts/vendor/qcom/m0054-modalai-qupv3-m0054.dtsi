@@ -70,7 +70,7 @@
 
 /* M0054 - TODO: enable HS B2B GPIO 36-39. */
 &qupv3_se13_4uart {
-	status = "disabled";
+	status = "ok";
 };
 
 /* M0054 - J10 - GPIO 40-44 */
