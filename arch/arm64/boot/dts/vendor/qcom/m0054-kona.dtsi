@@ -62,6 +62,7 @@
 		spi0 = &qupv3_se0_spi;
 		spi1 = &qupv3_se1_spi;
 		spi3 = &qupv3_se3_spi;
+		spi11 = &qupv3_se11_spi;
 		spi14 = &qupv3_se14_spi;
 	};
 
