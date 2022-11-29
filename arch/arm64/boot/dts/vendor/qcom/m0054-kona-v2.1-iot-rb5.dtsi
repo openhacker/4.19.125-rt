@@ -144,6 +144,7 @@
 };
 
 &sde_dsi {
+	status = "disabled";
 	qcom,dsi-default-panel = <&dsi_ext_bridge_1080p>;
 
 	ports {
@@ -160,6 +161,7 @@
 };
 
 &sde_dsi1 {
+	status = "disabled";
 	ports {
 		#address-cells = <1>;
 		#size-cells = <0>;
