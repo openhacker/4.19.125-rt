@@ -15,7 +15,7 @@
 
 /* M0054 - J7 - Camera Group 1 - GPIO 4-7 */
 &qupv3_se1_spi {
-	status = "ok";
+	status = "disabled";
 	spidev@0 {
 		compatible = "spidev";
 		reg = <0>;
