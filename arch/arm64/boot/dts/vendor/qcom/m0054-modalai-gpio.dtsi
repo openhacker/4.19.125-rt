@@ -2,7 +2,14 @@
 	b2b_conn_gpio_init {
 		compatible = "modalai,voxl-b2b";
 		pinctrl-names = "default";
-		pinctrl-0 = <&tck22912G_ctrl_pin &b2b_pin7 &b2b_pin9 &b2b_pin17 &b2b_pin19 &b2b_pin38 &b2b_pin40 &hs_b2b_pin46 &hs_b2b_pin47 &hs_b2b_pin50 &hs_b2b_pin51>;
+		pinctrl-0 = <&tck22912G_ctrl_pin &b2b_pin7 &b2b_pin9 &b2b_pin17 &b2b_pin19 &b2b_pin38 &b2b_pin40>;
+		status = "ok";
+	};
+
+	hs_b2b_conn_gpio_init {
+		compatible = "modalai,voxl-b2b";
+		pinctrl-names = "default";
+		pinctrl-0 = <&hs_b2b_pin41 &hs_b2b_pin42 &hs_b2b_pin43 &hs_b2b_pin44 &hs_b2b_pin46 &hs_b2b_pin47 &hs_b2b_pin50 &hs_b2b_pin51>;
 		status = "ok";
 	};
 
