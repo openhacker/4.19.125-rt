@@ -8,9 +8,9 @@
 	};
 };
 
-/* M0054 - not used as I2C, exposed as Camera SPI */
+/* M0054 - camera group I2C */
 &qupv3_se1_i2c {
-	status = "disabled";
+	status = "ok";
 };
 
 /* M0054 - J7 - Camera Group 1 - GPIO 4-7 */
