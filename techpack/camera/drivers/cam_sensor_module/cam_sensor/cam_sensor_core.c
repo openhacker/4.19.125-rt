@@ -777,7 +777,7 @@ int cam_sensor_set_alt_id(struct cam_sensor_ctrl_t *s_ctrl)
 	return rc;
 }
 
-int cam_sensor_imx678_disable_standby(struct cam_sensor_ctrl_t *s_ctrl)
+int cam_sensor_imx6xx_disable_standby(struct cam_sensor_ctrl_t *s_ctrl)
 {
 	/* 
 	* ModalAI 
@@ -788,8 +788,8 @@ int cam_sensor_imx678_disable_standby(struct cam_sensor_ctrl_t *s_ctrl)
 
 	int rc = 0;
 
-	/* Check if we're probing for IMX678 */
-	if (s_ctrl->sensordata->slave_info.sensor_id != 0xA602) {
+	/* Check if we're probing for IMX678/686 */
+	if ((s_ctrl->sensordata->slave_info.sensor_id != 0xA602) && (s_ctrl->sensordata->slave_info.sensor_id != 0x0686)){
 		return rc;
 	}
 
@@ -900,8 +900,8 @@ int32_t cam_sensor_driver_cmd(struct cam_sensor_ctrl_t *s_ctrl,
 		/* ModalAI Hack - right after power up, set alt ID as needed*/
 		rc = cam_sensor_set_alt_id(s_ctrl);
 
-		/* ModalAI - disable standby register for imx678 */
-		rc = cam_sensor_imx678_disable_standby(s_ctrl);		
+		/* ModalAI - disable standby register for imx678/686 */
+		rc = cam_sensor_imx6xx_disable_standby(s_ctrl);		
 
 		/* Match sensor ID */
 		rc = cam_sensor_match_id(s_ctrl);
