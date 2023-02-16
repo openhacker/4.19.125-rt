@@ -468,13 +468,13 @@
 		pil_slpi_mem: pil_slpi_region@88c00000 {
 			compatible = "removed-dma-pool";
 			no-map;
-			reg = <0x0 0x88c00000 0x0 0x1500000>;
+			reg = <0x0 0x88c00000 0x0 0x1a00000>;
 		};
 
-		pil_adsp_mem: pil_adsp_region@8a100000 {
+		pil_adsp_mem: pil_adsp_region@8a600000 {
 			compatible = "removed-dma-pool";
 			no-map;
-			reg = <0x0 0x8a100000 0x0 0x1d00000>;
+			reg = <0x0 0x8a600000 0x0 0x1800000>;
 		};
 
 		pil_spss_mem: pil_spss_region@8be00000 {
