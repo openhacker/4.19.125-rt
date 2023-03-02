@@ -1,61 +1,7 @@
 ifeq ($(PLATFORM_TYPE),m0054)
-        ifeq ($(CONFIG_BUILD_ARM64_DT_OVERLAY),y)
-                dtbo-$(CONFIG_ARCH_KONA) += \
-                        m0054-kona-cdp-overlay.dtbo \
-                        m0054-kona-cdp-lcd-overlay.dtbo \
-                        m0054-kona-mtp-overlay.dtbo \
-                        m0054-kona-mtp-ws-overlay.dtbo \
-        		m0054-kona-sa-mtp-overlay.dtbo \
-                        m0054-kona-xr-overlay.dtbo \
-                        m0054-kona-rumi-overlay.dtbo \
-                        m0054-kona-qrd-overlay.dtbo \
-        		m0054-kona-xrfusion-overlay.dtbo \
-        		m0054-kona-xrfusion-ult-overlay.dtbo \
-                        m0054-kona-hdk-overlay.dtbo
-
-        m0054-kona-cdp-overlay.dtbo-base := m0054-kona.dtb m0054-kona-v2.dtb m0054-kona-v2.1.dtb
-        m0054-kona-cdp-lcd-overlay.dtbo-base := m0054-kona.dtb m0054-kona-v2.dtb m0054-kona-v2.1.dtb
-        m0054-kona-mtp-overlay.dtbo-base := m0054-kona.dtb m0054-kona-v2.dtb m0054-kona-v2.1.dtb
-        m0054-kona-mtp-ws-overlay.dtbo-base := m0054-kona.dtb m0054-kona-v2.dtb m0054-kona-v2.1.dtb
-        m0054-kona-sa-mtp-overlay.dtbo-base := m0054-kona.dtb m0054-kona-v2.dtb m0054-kona-v2.1.dtb
-        m0054-kona-xr-overlay.dtbo-base := m0054-kona.dtb m0054-kona-v2.dtb m0054-kona-v2.1.dtb
-        m0054-kona-rumi-overlay.dtbo-base := m0054-kona.dtb m0054-kona-v2.dtb m0054-kona-v2.1.dtb
-        m0054-kona-qrd-overlay.dtbo-base := m0054-kona.dtb m0054-kona-v2.dtb m0054-kona-v2.1.dtb
-        m0054-kona-xrfusion-overlay.dtbo-base := m0054-kona.dtb m0054-kona-v2.dtb m0054-kona-v2.1.dtb
-        m0054-kona-xrfusion-ult-overlay.dtbo-base := m0054-kona.dtb m0054-kona-v2.dtb m0054-kona-v2.1.dtb
-        m0054-kona-hdk-overlay.dtbo-base := m0054-kona.dtb m0054-kona-v2.dtb m0054-kona-v2.1.dtb
-        else
-                dtb-$(CONFIG_ARCH_KONA) += m0054-kona-rumi.dtb \
-                m0054-kona-mtp.dtb \
-                m0054-kona-mtp-ws.dtb \
-                m0054-kona-mtp-sa.dtb \
-                m0054-kona-xr.dtb \
-        	m0054-kona-xrfusion.dtb \
-        	m0054-kona-xrfusion-ult.dtb \
-                m0054-kona-cdp.dtb \
-                m0054-kona-cdp-lcd.dtb \
-                m0054-kona-qrd.dtb \
-                m0054-kona-v2-rumi.dtb \
-                m0054-kona-v2-mtp.dtb \
-                m0054-kona-v2-mtp-ws.dtb \
-                m0054-kona-v2-mtp-sa.dtb \
-                m0054-kona-v2-cdp.dtb \
-                m0054-kona-v2-qrd.dtb \
-        	m0054-kona-v2-xrfusion.dtb \
-        	m0054-kona-v2-xrfusion-ult.dtb \
-                m0054-kona-hdk.dtb \
-                m0054-kona-v2.1-mtp.dtb \
-                m0054-kona-v2.1-mtp-ws.dtb \
-                m0054-kona-v2.1-mtp-sa.dtb \
-                m0054-kona-v2.1-cdp.dtb \
-                m0054-kona-v2.1-qrd.dtb \
-                m0054-kona-v2.1-hdk.dtb \
-                m0054-kona-v2.1-xrfusion.dtb \
-                m0054-kona-v2.1-xrfusion-ult.dtb \
-                m0054-qrb5165-iot-rb5.dtb \
-                m0054-qrb5165n-iot-rb5.dtb \
-                m0054-kona-v2.1-iot-rb5.dtb
-        endif
+        dtb-$(CONFIG_ARCH_KONA) += m0054-qrb5165-iot-rb5.dtb \
+        m0054-qrb5165n-iot-rb5.dtb \
+        m0054-kona-v2.1-iot-rb5.dtb
 endif
 
 ifeq ($(PLATFORM_TYPE),m0052)
