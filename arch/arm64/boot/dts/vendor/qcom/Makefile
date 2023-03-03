@@ -1,7 +1,5 @@
 ifeq ($(PLATFORM_TYPE),m0054)
-        dtb-$(CONFIG_ARCH_KONA) += m0054-qrb5165-iot-rb5.dtb \
-        m0054-qrb5165n-iot-rb5.dtb \
-        m0054-kona-v2.1-iot-rb5.dtb
+        dtb-$(CONFIG_ARCH_KONA) += m0054-kona-v2.1-iot-rb5.dtb
 endif
 
 ifeq ($(PLATFORM_TYPE),m0052)
