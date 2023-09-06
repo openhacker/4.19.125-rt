@@ -1,6 +1,9 @@
 #!/bin/sh
 # SPDX-License-Identifier: GPL-2.0
 
+
+set -xv
+
 TARGET=$1
 ARCH=$2
 SMP=$3
@@ -28,11 +31,19 @@ set -f
 LC_ALL=C
 export LC_ALL
 
+
+echo KBUILD_BUILD_VERSION = "$KBUILD_BUILD_VERSION"
+
 if [ -z "$KBUILD_BUILD_VERSION" ]; then
 	VERSION=$(cat .version 2>/dev/null || echo 1)
 else
 	VERSION=$KBUILD_BUILD_VERSION
 fi
+
+if [ -r .version ]; then
+	VERSION=$(cat .version)
+fi
+
 
 if [ -z "$KBUILD_BUILD_TIMESTAMP" ]; then
 	TIMESTAMP=`date`
@@ -54,6 +65,7 @@ UTS_VERSION="#$VERSION"
 CONFIG_FLAGS=""
 if [ -n "$SMP" ] ; then CONFIG_FLAGS="SMP"; fi
 if [ -n "$PREEMPT" ] ; then CONFIG_FLAGS="$CONFIG_FLAGS PREEMPT"; fi
+if [ -n "$RT" ] ; then CONFIG_FLAGS="$CONFIG_FLAGS RT"; fi
 UTS_VERSION="$UTS_VERSION $CONFIG_FLAGS $TIMESTAMP"
 
 # Truncate to maximum length
