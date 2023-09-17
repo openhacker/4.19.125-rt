@@ -914,7 +914,24 @@ struct task_struct {
 
 	unsigned int			policy;
 	int				nr_cpus_allowed;
-	cpumask_t			cpus_allowed;
+// 	cpumask_t			cpus_allowed;
+        const cpumask_t                 *cpus_ptr;
+        cpumask_t                       cpus_mask;
+  #if defined(CONFIG_SMP) && defined(CONFIG_PREEMPT_RT_BASE)
+        int                             migrate_disable;
+        bool                            migrate_disable_scheduled;
+  # ifdef CONFIG_SCHED_DEBUG
+        int                             pinned_on_cpu;
+  # endif
+  #elif !defined(CONFIG_SMP) && defined(CONFIG_PREEMPT_RT_BASE)
+  # ifdef CONFIG_SCHED_DEBUG
+        int                             migrate_disable;
+  # endif
+  #endif
+  #ifdef CONFIG_PREEMPT_RT_FULL
+        int                             sleeping_lock;
+  #endif
+
 	cpumask_t			cpus_requested;
 
 #ifdef CONFIG_PREEMPT_RCU

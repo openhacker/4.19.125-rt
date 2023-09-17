@@ -44,6 +44,8 @@ struct thread_info {
 	u64			ttbr0;		/* saved TTBR0_EL1 */
 #endif
 	int			preempt_count;	/* 0 => preemptable, <0 => bug */
+        int                     preempt_lazy_count; /* 0 => preemptable, <0 => bug */
+	
 #ifdef CONFIG_SHADOW_CALL_STACK
 	void			*shadow_call_stack;
 #endif

@@ -35,6 +35,7 @@
 #include <asm/suspend.h>
 #include <linux/kbuild.h>
 #include <linux/arm-smccc.h>
+// #include <linux/thread_info.h>
 
 int main(void)
 {
