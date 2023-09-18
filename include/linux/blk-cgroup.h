@@ -14,7 +14,9 @@
  * 	              Nauman Rafique <nauman@google.com>
  */
 
-#include <linux/kthread.h>
+#include <linux/cgroup.h>
+// this patch is very strange -- ml
+// #include <linux/kthread.h>
 #include <linux/percpu_counter.h>
 #include <linux/seq_file.h>
 #include <linux/radix-tree.h>
