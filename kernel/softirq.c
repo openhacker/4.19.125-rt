@@ -525,10 +525,13 @@ restart:
 		if (time_before(jiffies, end) && !need_resched() &&
 		    --max_restart)
 			goto restart;
+		wakeup_softirqd();
 	}
 
+#if 0
 	if (pending | deferred)
 		wakeup_softirqd();
+#endif
 	lockdep_softirq_end(in_hardirq);
 	account_irq_exit_time(current);
 	__local_bh_enable(SOFTIRQ_OFFSET);
@@ -878,6 +881,7 @@ void irq_enter(void)
 
 static inline void invoke_softirq(void)
 {
+#ifndef CONFIG_PREEMPT_RT_FULL
 	if (!force_irqthreads) {
 #ifdef CONFIG_HAVE_IRQ_EXIT_ON_IRQ_STACK
 		/*
@@ -1052,6 +1056,7 @@ static void tasklet_action_common(struct softirq_action *a,
 	tl_head->tail = &tl_head->head;
 	local_irq_enable();
 
+#if 0
 	while (list) {
 		struct tasklet_struct *t = list;
 
@@ -1078,6 +1083,66 @@ static void tasklet_action_common(struct softirq_action *a,
 		__raise_softirq_irqoff(softirq_nr);
 		local_irq_enable();
 	}
+#endif
+
+	while (list) {
+		struct tasklet_struct *t = list;
+
+		list = list->next;
+		/*
+		 * Should always succeed - after a tasklist got on the
+		 * list (after getting the SCHED bit set from 0 to 1),
+		 * nothing but the tasklet softirq it got queued to can
+		 * lock it:
+		 */
+		if (!tasklet_trylock(t)) {
+			WARN_ON(1);
+			continue;
+		}
+
+		t->next = NULL;
+
+		if (unlikely(atomic_read(&t->count))) {
+out_disabled:
+			/* implicit unlock: */
+			wmb();
+			t->state = TASKLET_STATEF_PENDING;
+			continue;
+		}
+		/*
+		 * After this point on the tasklet might be rescheduled
+		 * on another CPU, but it can only be added to another
+		 * CPU's tasklet list if we unlock the tasklet (which we
+		 * dont do yet).
+		 */
+		if (!test_and_clear_bit(TASKLET_STATE_SCHED, &t->state))
+			WARN_ON(1);
+again:
+		trace_tasklet_entry(t->func);
+		t->func(t->data);
+		trace_tasklet_exit(t->func);
+
+		while (cmpxchg(&t->state, TASKLET_STATEF_RC, 0) != TASKLET_STATEF_RC) {
+			/*
+			 * If it got disabled meanwhile, bail out:
+			 */
+			if (atomic_read(&t->count))
+				goto out_disabled;
+			/*
+			 * If it got scheduled meanwhile, re-execute
+			 * the tasklet function:
+			 */
+			if (test_and_clear_bit(TASKLET_STATE_SCHED, &t->state))
+				goto again;
+			if (!--loops) {
+				printk("hm, tasklet state: %08lx\n", t->state);
+				WARN_ON(1);
+				tasklet_unlock(t);
+				break;
+			}
+		}
+	}
+
 }
 
 static __latent_entropy void tasklet_action(struct softirq_action *a)
