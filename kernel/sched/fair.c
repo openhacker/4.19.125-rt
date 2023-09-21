@@ -3925,7 +3925,7 @@ done:
 static inline bool
 bias_to_this_cpu(struct task_struct *p, int cpu, int start_cpu)
 {
-	bool base_test = cpumask_test_cpu(cpu, &p->cpus_allowed) &&
+	bool base_test = cpumask_test_cpu(cpu, p->cpus_ptr) &&
 			cpu_active(cpu);
 	bool start_cap_test = (capacity_orig_of(cpu) >=
 					capacity_orig_of(start_cpu));
@@ -6983,7 +6983,7 @@ static void find_best_target(struct sched_domain *sd, cpumask_t *cpus,
 	/* Scan CPUs in all SDs */
 	sg = start_sd->groups;
 	do {
-		for_each_cpu_and(i, &p->cpus_allowed, sched_group_span(sg)) {
+		for_each_cpu_and(i, p->cpus_ptr, sched_group_span(sg)) {
 			unsigned long capacity_curr = capacity_curr_of(i);
 			unsigned long capacity_orig = capacity_orig_of(i);
 			unsigned long wake_util, new_util, new_util_cuml;
@@ -7579,7 +7579,7 @@ static void select_cpu_candidates(struct sched_domain *sd, cpumask_t *cpus,
 		max_spare_cap = 0;
 
 		for_each_cpu_and(cpu, perf_domain_span(pd), sched_domain_span(sd)) {
-			if (!cpumask_test_cpu(cpu, &p->cpus_allowed))
+			if (!cpumask_test_cpu(cpu, p->cpus_ptr))
 				continue;
 
 			util = cpu_util_next(cpu, p, cpu);
@@ -7733,7 +7733,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu,
 	int start_cpu;
 
 	if (is_many_wakeup(sibling_count_hint) && prev_cpu != cpu &&
-			cpumask_test_cpu(prev_cpu, &p->cpus_allowed))
+			cpumask_test_cpu(prev_cpu, p->cpus_ptr))
 		return prev_cpu;
 
 	start_cpu = get_start_cpu(p);
@@ -7810,7 +7810,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu,
 			unsigned int best_nr = UINT_MAX;
 
 			for_each_cpu(i, cpu_active_mask) {
-				if (!cpumask_test_cpu(i, &p->cpus_allowed))
+				if (!cpumask_test_cpu(i, p->cpus_ptr))
 					continue;
 				if (cpu_rq(i)->nr_running < best_nr) {
 					best_nr = cpu_rq(i)->nr_running;
@@ -7840,7 +7840,7 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu,
 		goto unlock;
 	}
 
-	if (cpumask_test_cpu(prev_cpu, &p->cpus_allowed))
+	if (cpumask_test_cpu(prev_cpu, p->cpus_ptr))
 		prev_energy = best_energy = compute_energy(p, prev_cpu, pd);
 	else
 		prev_energy = best_energy = ULONG_MAX;
@@ -8727,7 +8727,7 @@ int can_migrate_task(struct task_struct *p, struct lb_env *env)
 			!is_min_capacity_cpu(env->src_cpu))
 		return 0;
 
-	if (!cpumask_test_cpu(env->dst_cpu, p->cpus_cpus_ptr)) {
+	if (!cpumask_test_cpu(env->dst_cpu, p->cpus_ptr)) {
 		int cpu;
 
 		schedstat_inc(p->se.statistics.nr_failed_migrations_affine);

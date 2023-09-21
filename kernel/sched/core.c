@@ -1390,7 +1390,7 @@ static inline void enqueue_task(struct rq *rq, struct task_struct *p, int flags)
 	uclamp_rq_inc(rq, p);
 	p->sched_class->enqueue_task(rq, p, flags);
 	walt_update_last_enqueue(p);
-	trace_sched_enq_deq_task(p, 1, cpumask_bits(&p->cpus_allowed)[0]);
+	trace_sched_enq_deq_task(p, 1, cpumask_bits(p->cpus_ptr)[0]);	// ??? -- ml
 }
 
 static inline void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
@@ -1409,7 +1409,7 @@ static inline void dequeue_task(struct rq *rq, struct task_struct *p, int flags)
 	if (p == rq->ed_task)
 		early_detection_notify(rq, sched_ktime_clock());
 #endif
-	trace_sched_enq_deq_task(p, 0, cpumask_bits(&p->cpus_allowed)[0]);
+	trace_sched_enq_deq_task(p, 0, cpumask_bits(p->cpus_ptr)[0]);
 }
 
 void activate_task(struct rq *rq, struct task_struct *p, int flags)
@@ -2207,7 +2207,7 @@ static int select_fallback_rq(int cpu, struct task_struct *p, bool allow_iso)
 
 	for (;;) {
 		/* Any allowed, online CPU? */
-		for_each_cpu(dest_cpu, p->cpus_cpus_ptr) {
+		for_each_cpu(dest_cpu, p->cpus_ptr) {
 			if (!is_cpu_allowed(p, dest_cpu))
 				continue;
 			if (cpu_isolated(dest_cpu)) {
@@ -2953,7 +2953,7 @@ EXPORT_SYMBOL(wake_up_process);
  */
 int wake_up_lock_sleeper(struct task_struct *p)
 {
-	return try_to_wake_up(p, TASK_UNINTERRUPTIBLE, WF_LOCK_SLEEPER);
+	return try_to_wake_up(p, TASK_UNINTERRUPTIBLE, WF_LOCK_SLEEPER, 1);	// ml -- guess, 1
 }
 
 int wake_up_state(struct task_struct *p, unsigned int state)
@@ -6756,7 +6756,7 @@ static void migrate_tasks(struct rq *dead_rq, struct rq_flags *rf,
 		put_prev_task(rq, next);
 
 		if (!migrate_pinned_tasks && next->flags & PF_KTHREAD &&
-			!cpumask_intersects(&avail_cpus, &next->cpus_allowed)) {
+			!cpumask_intersects(&avail_cpus, next->cpus_ptr)) {
 			detach_one_task(next, rq, &tasks);
 			num_pinned_kthreads += 1;
 			continue;

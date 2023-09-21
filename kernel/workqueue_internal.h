@@ -75,6 +75,7 @@ static inline struct worker *current_wq_worker(void)
  */
 void wq_worker_waking_up(struct task_struct *task);
 void wq_worker_sleeping(struct task_struct *task);
+void wq_worker_running(struct task_struct *task);
 work_func_t wq_worker_last_func(struct task_struct *task);
 
 #endif /* _KERNEL_WORKQUEUE_INTERNAL_H */
