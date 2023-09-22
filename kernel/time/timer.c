@@ -1342,6 +1342,7 @@ int del_timer_sync(struct timer_list *timer)
 	 * could lead to deadlock.
 	 */
 	WARN_ON(in_irq() && !(timer->flags & TIMER_IRQSAFE));
+#if 0
 	for (;;) {
 		int ret = try_to_del_timer_sync(timer);
 		if (ret >= 0)
@@ -1349,6 +1350,9 @@ int del_timer_sync(struct timer_list *timer)
 		cpu_relax();
 		ndelay(TIMER_LOCK_TIGHT_LOOP_DELAY_NS);
 	}
+#else
+	return __del_timer_sync(timer);
+#endif
 }
 EXPORT_SYMBOL(del_timer_sync);
 #endif
