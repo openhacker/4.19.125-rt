@@ -452,7 +452,7 @@ void __wake_up_q(struct wake_q_head *head, bool sleeper)
 	while (node != WAKE_Q_TAIL) {
 		struct task_struct *task;
 
-		task = container_of(node, struct task_struct, wake_q);
+//		task = container_of(node, struct task_struct, wake_q);
 		if(sleeper)
 			task = container_of(node, struct task_struct, wake_q_sleeper);
 		else

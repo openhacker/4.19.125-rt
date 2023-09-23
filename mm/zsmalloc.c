@@ -363,8 +363,25 @@ static void destroy_cache(struct zs_pool *pool)
 
 static unsigned long cache_alloc_handle(struct zs_pool *pool, gfp_t gfp)
 {
+#if 0
 	return (unsigned long)kmem_cache_alloc(pool->handle_cachep,
 			gfp & ~(__GFP_HIGHMEM|__GFP_MOVABLE|__GFP_CMA));
+#else
+
+        void *p;
+ 
+        p = kmem_cache_alloc(pool->handle_cachep,
+                             gfp & ~(__GFP_HIGHMEM|__GFP_MOVABLE|__GFP_CMA)); // ml -- added flag
+ #ifdef CONFIG_PREEMPT_RT_FULL
+        if (p) {
+                struct zsmalloc_handle *zh = p;
+ 
+                mutex_init(&zh->lock);
+        }
+ #endif
+        return (unsigned long)p;
+#endif
+	
 }
 
 static void cache_free_handle(struct zs_pool *pool, unsigned long handle)

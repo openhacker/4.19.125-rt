@@ -3412,7 +3412,7 @@ struct page *rmqueue(struct zone *preferred_zone,
 
 	__count_zid_vm_events(PGALLOC, page_zonenum(page), 1 << order);
 	zone_statistics(preferred_zone, zone);
-	local_irq_restore(flags);
+	local_unlock_irqrestore(pa_lock, flags);
 
 out:
 	/* Separate test+clear to avoid unnecessary atomics */
@@ -3425,7 +3425,7 @@ out:
 	return page;
 
 failed:
-	local_irq_restore(flags);
+	local_unlock_irqrestore(pa_lock, flags);
 	return NULL;
 }
 

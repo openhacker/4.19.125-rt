@@ -5882,9 +5882,11 @@ static int process_backlog(struct napi_struct *napi, int quota)
 			input_queue_head_incr(sd);
 			if (++work >= quota)
 				goto state_changed;
+			local_irq_disable();	// ?? -- ml
+
 		}
 
-		local_irq_disable();
+//		local_irq_disable();
 		rps_lock(sd);
 		if (skb_queue_empty(&sd->input_pkt_queue)) {
 			/*

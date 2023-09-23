@@ -1213,7 +1213,12 @@ int hrtimer_cancel(struct hrtimer *timer)
 
 		if (ret >= 0)
 			return ret;
+#if 0
 		cpu_relax();
+#else
+                hrtimer_grab_expiry_lock(timer);
+#endif
+		
 		ndelay(TIMER_LOCK_TIGHT_LOOP_DELAY_NS);
 	}
 }
