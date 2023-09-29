@@ -58,6 +58,12 @@
 
 __visible u64 jiffies_64 __cacheline_aligned_in_smp = INITIAL_JIFFIES;
 
+
+#if 0
+static bool ran_hrtimer_init_thread = false;
+static int hrtimer_init_thread(void);
+#endif
+
 EXPORT_SYMBOL(jiffies_64);
 
 /*
@@ -244,11 +250,25 @@ static void timer_update_keys(struct swork_event *event)
 
 void timers_update_nohz(void)
 {
+
+#if 0
+	if(false == ran_hrtimer_init_thread) {
+		hrtimer_init_thread();
+	}
+#endif
 	swork_queue(&timer_update_swork);
 }
 
 static __init int hrtimer_init_thread(void)
+// static int hrtimer_init_thread(void)
 {
+	pr_info("%s\n", __func__); 
+#if 0
+	if(true == ran_hrtimer_init_thread)
+		return;
+	else	ran_hrtimer_init_thread = true;
+#endif
+
 	WARN_ON(swork_get());
 	INIT_SWORK(&timer_update_swork, timer_update_keys);
 	return 0;

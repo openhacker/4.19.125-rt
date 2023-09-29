@@ -113,6 +113,11 @@ bool swork_queue(struct swork_event *sev)
 	if (test_and_set_bit(SWORK_EVENT_PENDING, &sev->flags))
 		return false;
 
+	if(!glob_worker) {
+		pr_info("%s: glob_worker NULL\n", __func__);
+		return false;
+	}
+
 	raw_spin_lock_irqsave(&glob_worker->lock, flags);
 	list_add_tail(&sev->item, &glob_worker->events);
 	raw_spin_unlock_irqrestore(&glob_worker->lock, flags);
@@ -135,12 +140,13 @@ int swork_get(void)
 
 	mutex_lock(&worker_mutex);
 	if (!glob_worker) {
+		pr_info("%s %d\n", __func__, __LINE__);
 		worker = swork_create();
 		if (IS_ERR(worker)) {
 			mutex_unlock(&worker_mutex);
 			return -ENOMEM;
 		}
-
+		pr_info("%s %d\n", __func__, __LINE__);
 		glob_worker = worker;
 	}
 
