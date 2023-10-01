@@ -381,8 +381,15 @@ static unsigned long cache_alloc_handle(struct zs_pool *pool, gfp_t gfp)
  #endif
         return (unsigned long)p;
 #endif
-	
 }
+
+#ifdef CONFIG_PREEMPT_RT_FULL
+static struct zsmalloc_handle *zs_get_pure_handle(unsigned long handle)
+{
+	return (void *)(handle &~((1 << OBJ_TAG_BITS) - 1));
+}
+#endif
+
 
 static void cache_free_handle(struct zs_pool *pool, unsigned long handle)
 {

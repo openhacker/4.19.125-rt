@@ -72,7 +72,7 @@ struct zram_table_entry {
 		struct zram_entry *entry;
 		unsigned long element;
 	};
-	unsigned long flags;
+	unsigned long value;
 #ifdef CONFIG_PREEMPT_RT_BASE
        spinlock_t lock;
 #endif

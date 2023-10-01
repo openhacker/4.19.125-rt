@@ -97,6 +97,7 @@ static inline void rwsem_set_reader_owned(struct rw_semaphore *sem)
 }
 #endif
 
+#ifndef CONFIG_PREEMPT_RT_FULL
 #ifdef CONFIG_RWSEM_PRIO_AWARE
 
 #define RWSEM_MAX_PREEMPT_ALLOWED 3000
@@ -152,4 +153,6 @@ static inline bool rwsem_list_add_per_prio(struct rwsem_waiter *waiter_in,
 	list_add_tail(&waiter_in->list, &sem->wait_list);
 	return false;
 }
+#endif
+
 #endif
