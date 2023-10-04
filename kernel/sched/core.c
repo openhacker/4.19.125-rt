@@ -8808,6 +8808,7 @@ void migrate_enable(void)
 	struct task_struct *p = current;
 	struct rq *rq = this_rq();
 	int cpu = task_cpu(p);
+	bool allow_isolated = (p->flags & PF_KTHREAD);	// ml -- ??
 
 	WARN_ON_ONCE(p->migrate_disable <= 0);
 	if (p->migrate_disable > 1) {
@@ -8854,7 +8855,7 @@ void migrate_enable(void)
 
 		rq = task_rq_lock(p, &rf);
 		update_rq_clock(rq);
-		arg->dest_cpu = select_fallback_rq(cpu, p);
+		arg->dest_cpu = select_fallback_rq(cpu, p, allow_isolated);
 		task_rq_unlock(rq, p, &rf);
 
 		stop_one_cpu_nowait(task_cpu(p), migration_cpu_stop,

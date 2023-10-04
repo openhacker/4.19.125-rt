@@ -92,17 +92,17 @@ static void zram_meta_init_table_locks(struct zram *zram, size_t num_pages) { }
 
 static int zram_slot_trylock(struct zram *zram, u32 index)
 {
-	return bit_spin_trylock(ZRAM_LOCK, &zram->table[index].flags);
+	return bit_spin_trylock(ZRAM_LOCK, &zram->table[index].value);
 }
 
 static void zram_slot_lock(struct zram *zram, u32 index)
 {
-	bit_spin_lock(ZRAM_LOCK, &zram->table[index].flags);
+	bit_spin_lock(ZRAM_LOCK, &zram->table[index].value);
 }
 
 static void zram_slot_unlock(struct zram *zram, u32 index)
 {
-	bit_spin_unlock(ZRAM_LOCK, &zram->table[index].flags);
+	bit_spin_unlock(ZRAM_LOCK, &zram->table[index].value);
 }
 #endif
 
