@@ -8,8 +8,9 @@ TARGET=$1
 ARCH=$2
 SMP=$3
 PREEMPT=$4
-CC=$5
-LD=$6
+RT=$5
+CC=$6
+LD=$7
 
 vecho() { [ "${quiet}" = "silent_" ] || echo "$@" ; }
 
