@@ -1,0 +1,10 @@
+001-uart-disable-autosuspend.patch
+003-add-siera-usb-desc-qmi-wwan.patch
+004-quectel-add-usb-desc-qmi-wwan.patch
+004-quectel-remove-usb-desc.patch
+004-quectel-qmi-wwan.patch
+004-quectel-usb-wwan.patch
+005-telit-option.patch
+005-telit-qmi-wwan.patch
+006-dma-unmapping.patch
+006-subsystem-restart.patch
